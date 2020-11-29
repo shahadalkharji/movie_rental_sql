@@ -1,0 +1,27 @@
+
+WITH t1 AS
+  (SELECT f.title AS film_title,
+          COUNT(*) OVER (PARTITION BY f.title) AS rental_count,
+                        f.film_id AS filmid
+   FROM film f
+   JOIN inventory i ON f.film_id = i.film_id
+   JOIN rental r ON i.inventory_id = r.inventory_id),
+     t2 AS
+  (SELECT c.name AS category_name,
+          f.film_id AS filmid
+   FROM category c
+   JOIN film_category fc ON c.category_id = fc.category_id
+   JOIN film f ON f.film_id = fc.film_id
+   WHERE c.name IN ('Animation',
+                    'Children',
+                    'Classics',
+                    'Comedy',
+                    'Family',
+                    'Music'))
+SELECT DISTINCT t1.film_title,
+                t2.category_name,
+                t1.rental_count
+FROM t1
+JOIN t2 ON t1.filmid = t2.filmid
+ORDER BY 2,
+         1;
