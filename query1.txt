@@ -1,4 +1,4 @@
-
+\* Used Joins, Aggregations, Subqueries *\
 WITH t1 AS
   (SELECT f.title AS film_title,
           COUNT(*) OVER (PARTITION BY f.title) AS rental_count,
